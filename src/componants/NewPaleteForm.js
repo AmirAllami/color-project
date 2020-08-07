@@ -13,61 +13,7 @@ import DragableColorList from "./DragableColorList";
 import { arrayMove } from "react-sortable-hoc";
 import PaleteFormNav from "./PaleteFormNav";
 import ColorPickerForm from "./ColorPickerForm";
-const drawerWidth = 350;
-
-const styles = (theme) => ({
-  root: {
-    display: "flex",
-  },
-
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-    display: "flex",
-    alignItems: "center",
-  },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: "0 8px",
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  },
-  content: {
-    flexGrow: 1,
-    height: "calc(100vh - 64px)",
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentShift: {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
-  container: {
-    height: "100%",
-    width: "90%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttons: {
-    width: "100%",
-  },
-  button: {
-    width: "50%",
-  },
-});
+import styles from "./Styles/NewPaletteFormStyles";
 
 class NewPaletteForm extends Component {
   static defaultProps = {
