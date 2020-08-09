@@ -46,3 +46,21 @@
   margin-left: auto;
   margin-right: 1rem;
 }
+@media (max-width: 1199.98px) {
+}
+@media (max-width: 991.98px) {
+  .slider {
+    width: 200px;
+  }
+}
+
+@media (max-width: 767.98px) {
+}
+@media (max-width: 575.98px) {
+  .logo {
+    display: none;
+  }
+  .slider {
+    width: 150px;
+  }
+}

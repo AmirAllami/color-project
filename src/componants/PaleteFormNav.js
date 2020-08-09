@@ -78,7 +78,7 @@ class PaleteFormNav extends Component {
               className={classes.butt}
               onClick={this.showForm}
             >
-              Open form dialog
+              SAVE
             </Button>
           </div>
         </AppBar>

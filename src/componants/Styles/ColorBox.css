@@ -119,3 +119,24 @@
   font-size: 2rem;
   font-weight: 100;
 }
+@media (max-width: 1199.98px) {
+}
+@media (max-width: 991.98px) {
+  .ColorBox {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .ColorBox {
+    width: 50%;
+  }
+}
+@media (max-width: 575.98px) {
+  .ColorBox {
+    width: 100%;
+  }
+  .copy-mssg h1 {
+    font-size: 6rem;
+  }
+}

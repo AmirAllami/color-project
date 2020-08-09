@@ -2,47 +2,45 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import MiniPalette from "./MiniPalette";
+import Dialog from "@material-ui/core/Dialog";
 
-const Style = {
-  root: {
-    backgroundColor: "darkblue",
-    height: "100vh",
-    display: "flex",
-    alignItem: "flex-start",
-    justifyContent: "center",
-    overflow: "auto",
-  },
-  container: {
-    width: "50%",
-    display: "flex",
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
+import blue from "@material-ui/core/colors/blue";
+import red from "@material-ui/core/colors/red";
+import Avatar from "@material-ui/core/Avatar";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import Style from "./Styles/PaletteListStyles";
 
-    alignItems: "flex-start",
-    flexDirection: "column",
-    flexWrap: "nowrap",
-  },
-  nav: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "space-between",
-    color: "white",
-    alignItems: "center",
-    color: "white",
-    "& a": {
-      textDecoration: "none",
-      color: "white",
-    },
-  },
-  palettes: {
-    boxSizing: "border-box",
-    width: "100%",
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 30%)",
-    gridGap: "5%",
-  },
-};
 class PaletteList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openDeleteDialog: false,
+      deletedId: "",
+    };
+    this.openDialog = this.openDialog.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
+    this.handleConformDelete = this.handleConformDelete.bind(this);
+  }
+  openDialog(id) {
+    this.setState({ openDeleteDialog: true });
+    this.setState({ deletedId: id });
+  }
+  closeDialog() {
+    this.setState({ openDeleteDialog: false, deletedId: "" });
+  }
   goToPallete(id) {
     this.props.history.push(`/palette/${id}`);
+  }
+  handleConformDelete() {
+    this.props.deletePalette(this.state.deletedId);
+    this.closeDialog();
   }
   render() {
     const { palettes, classes } = this.props;
@@ -50,20 +48,52 @@ class PaletteList extends Component {
       <div className={classes.root}>
         <div className={classes.container}>
           <nav className={classes.nav}>
-            <h1>Color APP</h1>
+            <h1 className={classes.title}>Color APP</h1>
             <Link to="/palette/new">Create Palette</Link>
           </nav>
-          <div className={classes.palettes}>
+          <TransitionGroup className={classes.palettes}>
             {palettes.map((p) => (
-              <div>
+              <CSSTransition key={p.id} classNames="fade" timeout={500}>
                 <MiniPalette
+                  key={p.id}
                   {...p}
                   handleClick={() => this.goToPallete(p.id)}
+                  //handleRemove={this.props.deletePalette}
+                  openDialog={this.openDialog}
                 />
-              </div>
+              </CSSTransition>
             ))}
-          </div>
+          </TransitionGroup>
         </div>
+        <Dialog
+          open={this.state.openDeleteDialog}
+          aria-labelledby="Delete-Dialog-title"
+          onClose={this.closeDialog}
+        >
+          <DialogTitle id="Delete-Dialog-title">
+            Delete this palette
+          </DialogTitle>
+          <List>
+            <ListItem button onClick={this.handleConformDelete}>
+              <ListItemAvatar>
+                <Avatar
+                  style={{ backgroundColor: blue[100], color: blue[600] }}
+                >
+                  <CloseIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Delete" />
+            </ListItem>
+            <ListItem button onClick={this.closeDialog}>
+              <ListItemAvatar>
+                <Avatar style={{ backgroundColor: red[100], color: red[600] }}>
+                  <CheckIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="close" />
+            </ListItem>
+          </List>
+        </Dialog>
       </div>
     );
   }

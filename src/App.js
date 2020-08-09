@@ -14,11 +14,13 @@ import "./App.css";
 class App extends Component {
   constructor(props) {
     super(props);
+    const savedPalettes = JSON.parse(window.localStorage.getItem("palettes"));
     this.state = {
-      palettes: SeedColors,
+      palettes: savedPalettes || SeedColors,
     };
     this.savePalette = this.savePalette.bind(this);
     this.findPalette = this.findPalette.bind(this);
+    this.deletePalette = this.deletePalette.bind(this);
   }
   findPalette(id) {
     return this.state.palettes.find(function (pallette) {
@@ -26,11 +28,29 @@ class App extends Component {
     });
   }
   savePalette(newPalette) {
-    this.setState({
-      palettes: [...this.state.palettes, newPalette],
-    });
+    this.setState(
+      {
+        palettes: [...this.state.palettes, newPalette],
+      },
+      this.syncToLocalStorage
+    );
+  }
+  deletePalette(id) {
+    this.setState(
+      (st) => ({
+        palettes: st.palettes.filter((palette) => palette.id !== id),
+      }),
+      this.syncToLocalStorage
+    );
+  }
+  syncToLocalStorage() {
+    window.localStorage.setItem(
+      "palettes",
+      JSON.stringify(this.state.palettes)
+    );
   }
   render() {
+    console.log(this.state.palettes.length);
     return (
       <Switch>
         <Route
@@ -39,7 +59,11 @@ class App extends Component {
           render={(routeProps) => (
             <NewPaleteForm
               savePalette={this.savePalette}
-              palettes={this.state.palettes}
+              palettes={
+                this.state.palettes.length === 0
+                  ? SeedColors
+                  : this.state.palettes
+              }
               {...routeProps}
             />
           )}
@@ -48,7 +72,11 @@ class App extends Component {
           exact
           path="/"
           render={(routeProps) => (
-            <PaletteList palettes={this.state.palettes} {...routeProps} />
+            <PaletteList
+              palettes={this.state.palettes}
+              deletePalette={this.deletePalette}
+              {...routeProps}
+            />
           )}
         />
         <Route
@@ -71,6 +99,15 @@ class App extends Component {
                 this.findPalette(routeProps.match.params.paletteId)
               )}
               colorId={routeProps.match.params.colorId}
+            />
+          )}
+        />
+        <Route
+          render={(routeProps) => (
+            <PaletteList
+              palettes={this.state.palettes}
+              deletePalette={this.deletePalette}
+              {...routeProps}
             />
           )}
         />
